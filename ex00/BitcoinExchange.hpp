@@ -6,7 +6,7 @@
 /*   By: psuanpro <psuanpro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 16:18:11 by psuanpro          #+#    #+#             */
-/*   Updated: 2023/06/21 01:55:39 by psuanpro         ###   ########.fr       */
+/*   Updated: 2023/06/22 01:59:42 by psuanpro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,11 @@
 # include <map>
 # include <string>
 
+struct	Date {
+	int	year;
+	int	month;
+	int	day;
+};
 class	 BitcoinExchange {
 	public:
 		BitcoinExchange();
@@ -27,21 +32,26 @@ class	 BitcoinExchange {
 		BitcoinExchange& operator=( const BitcoinExchange& cp );
 		~BitcoinExchange();
 
-		void		setFilePath( const std::string& file_path );
-		std::string	getFilePath( void ) ;
-		void		setExchange( const std::string& key, double value );
-		void		getAllExchange( void );
+		void						setExchange( const std::string& key, double value );
+		void						setInput( const std::string& key, double value );
+		void						getAllExchange( void );
+		void						getAllInput( void );
+		void						setCsvData( void );
+		bool						printError( const std::string& msg );
+		bool						leabYear( int year );
+		bool						thirtyOneMonth( int month);
+		void						run(const std::string& input_file);
+		void						setCsvInput( const std::string& input_file);
+		bool						validateData(const std::vector<std::string>& tvec);
+		bool						validateDate(const std::string& date);
+		bool						validatePrice(const std::string& price);
+		void						compare(const std::string& date, double price );
+		std::string					trim( const std::string& str );
 		std::vector<std::string>	split(const std::string& str, char delim);
-		void		getCsvData( void );
-		bool		validateData( const std::vector<std::string>& data );
-		bool		validateData( const std::string& date );
-		bool		validateData( double price );
-		bool		printError( const std::string& msg );
-	private:
-		std::string						_file_path;
-		std::map<std::string, double>	_exchange;
-		std::ifstream					_fd;
 
+	private:
+		std::multimap<std::string, double>	_exchange;
+		std::multimap<std::string, double>	_input;
 };
 
 #endif

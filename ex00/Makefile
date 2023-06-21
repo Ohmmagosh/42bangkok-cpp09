@@ -6,11 +6,11 @@
 #    By: psuanpro <psuanpro@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/17 16:18:08 by psuanpro          #+#    #+#              #
-#    Updated: 2023/06/17 23:08:56 by psuanpro         ###   ########.fr        #
+#    Updated: 2023/06/22 00:58:34 by psuanpro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME=BitcoinExchange
+NAME=btc
 CC=g++
 CFLAGS=-Wall -Wextra -Werror -std=c++98
 
@@ -33,5 +33,17 @@ FCLEAN = echo "$(BRED)$(NAME) fclean....$(RES)"
 
 all:$(NAME)
 
-$(NAME): $(OBJS)
-	@$
+$(NAME):$(OBJS)
+		@$(CC) -g $(CFLAGS) $(OBJS) -o $@
+		@$(COMPILE)
+
+clean:
+		@rm -rf $(OBJS)
+		@$(FCLEAN)
+
+fclean: clean
+		@rm -rf $(NAME)
+		@$(FCLEAN)
+
+re: fclean all
+.PHONY: all re clean fclean
