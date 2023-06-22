@@ -6,7 +6,7 @@
 /*   By: psuanpro <psuanpro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 16:18:13 by psuanpro          #+#    #+#             */
-/*   Updated: 2023/06/22 21:13:27 by psuanpro         ###   ########.fr       */
+/*   Updated: 2023/06/22 21:49:38 by psuanpro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,7 +212,6 @@ std::string	BitcoinExchange::trim( const std::string& str ) {
 
 bool	BitcoinExchange::validInputPrice(const std::string& price) {
 	for (unsigned int i = 0; i < price.size(); i++) {
-		// std::cout << std::isalpha(price[i]) << std::endl;
 		if (std::isalpha(price[i]))
 			return (false);
 	}
