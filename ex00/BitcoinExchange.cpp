@@ -6,7 +6,7 @@
 /*   By: psuanpro <psuanpro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 16:18:13 by psuanpro          #+#    #+#             */
-/*   Updated: 2023/06/22 17:48:25 by psuanpro         ###   ########.fr       */
+/*   Updated: 2023/06/22 21:13:27 by psuanpro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ BitcoinExchange::BitcoinExchange( const BitcoinExchange& cp ) {
 
 BitcoinExchange&	BitcoinExchange::operator=( const BitcoinExchange& cp ) {
 	if (this != &cp) {
-
+		this->_exchange(cp._exchange);
+		this->_input(cp._input)
 	}
 	return (*this);
 }
