@@ -6,7 +6,7 @@
 /*   By: psuanpro <psuanpro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 16:18:13 by psuanpro          #+#    #+#             */
-/*   Updated: 2023/06/22 02:48:00 by psuanpro         ###   ########.fr       */
+/*   Updated: 2023/06/22 17:48:25 by psuanpro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ BitcoinExchange&	BitcoinExchange::operator=( const BitcoinExchange& cp ) {
 }
 
 BitcoinExchange::~BitcoinExchange(void) {
-	std::cout << "BitcoinExchange Destroy!!" << std::endl;
+	// std::cout << "BitcoinExchange Destroy!!" << std::endl;
 }
 
 void	BitcoinExchange::setExchange( const std::string& key, double value) {
@@ -154,6 +154,11 @@ bool	BitcoinExchange::printError( const std::string& msg ) {
 	return (false);
 }
 
+bool	BitcoinExchange::printError( const std::string& msg, const std::string& date ) {
+	std::cout << "Error : " << msg << " => "<< date << std::endl;
+	return (false);
+}
+
 void	BitcoinExchange::setInput( const std::string& key, double value ) {
 	this->_input.insert(std::pair<std::string, double>(key, value));
 }
@@ -168,28 +173,32 @@ void	BitcoinExchange::run(const std::string& input_file) {
 		return ;
 	}
 	while(std::getline(fd, tmp)){
-		tvec = this->split(tmp, '|');
-		std::cout << tmp << std::endl;
-		st::cout << "[0] : " << tvec[0]
-		tmp.clear();
+		if (tmp.compare("\n") != 0) {
+			tvec = this->split(tmp, '|');
+			this->compare(tvec);
+			tmp.clear();
+			tvec.clear();
+		} else
+			tmp.clear();
 	}
 	return ;
 }
 
 std::string	BitcoinExchange::trim( const std::string& str ) {
 	std::string ret;
+	std::string	cs = str;
 	int en = str.size() - 1;
 	int len = 0;
 	int st = 0;
 
-	while (str[st] != std::string::npos) {
-		if (std::isspace(str[st]))
+	while (cs[st]) {
+		if (std::isspace(cs[st]))
 			st++;
 		else
 			break;
 	}
 	while (en < 0) {
-		if (std::isspace(str[en])) {
+		if (std::isspace(cs[en])) {
 			len++;
 			en--;
 		}
@@ -200,9 +209,51 @@ std::string	BitcoinExchange::trim( const std::string& str ) {
 	return (ret);
 }
 
-// void	BitcoinExchange::compare( const std::string& date, double price ) {
-// 	std::string	tdate;
-// 	double		tprice;
+bool	BitcoinExchange::validInputPrice(const std::string& price) {
+	for (unsigned int i = 0; i < price.size(); i++) {
+		// std::cout << std::isalpha(price[i]) << std::endl;
+		if (std::isalpha(price[i]))
+			return (false);
+	}
+	return (true);
+}
+void	BitcoinExchange::printCompare(const std::string& date, double price, double rate) {
+	std::cout << date << " => " << price << " = " << price * rate << std::endl;
+	return ;
+}
 
+void	BitcoinExchange::compare( const std::vector<std::string>& tvec ) {
 
-// }
+	std::string									sdate;
+	std::string									sprice;
+	std::multimap<std::string,double>::iterator	it;
+
+	if (tvec.size() != 2 ) {
+		this->printError("bad input", this->trim(tvec[0]));
+		return ;
+	}
+	sdate = this->trim(tvec[0]);
+	sprice = this->trim(tvec[1]);
+	if (sprice.compare("value") == 0)
+		return ;
+	if (!this->validInputPrice(this->trim(tvec[1]))) {
+		this->printError("bad input", tvec[1]);
+		return ;
+	}
+	if (std::stod(sprice) < 0) {
+		this->printError("not a positive number.");
+		return ;
+	}
+	if (std::stod(sprice) > 1000) {
+		this->printError("too large a number.");
+		return ;
+	}
+	it = this->_exchange.lower_bound(sdate);
+	if (it == this->_exchange.end())
+		it--;
+	else
+		it--;
+	this->printCompare(sdate, std::stod(sprice), it->second);
+	this->setInput(sdate, std::stod(sprice));
+	return ;
+}

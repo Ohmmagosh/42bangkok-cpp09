@@ -6,7 +6,7 @@
 #    By: psuanpro <psuanpro@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/17 16:18:08 by psuanpro          #+#    #+#              #
-#    Updated: 2023/06/22 00:58:34 by psuanpro         ###   ########.fr        #
+#    Updated: 2023/06/22 15:15:27 by psuanpro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,6 +36,14 @@ all:$(NAME)
 $(NAME):$(OBJS)
 		@$(CC) -g $(CFLAGS) $(OBJS) -o $@
 		@$(COMPILE)
+
+t:
+	@$(CC) main.cpp -o test
+	@sleep 1
+	@./test
+
+ct:
+	@rm -rf test
 
 clean:
 		@rm -rf $(OBJS)
