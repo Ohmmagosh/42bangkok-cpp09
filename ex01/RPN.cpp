@@ -6,7 +6,7 @@
 /*   By: psuanpro <psuanpro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:42:03 by psuanpro          #+#    #+#             */
-/*   Updated: 2023/06/23 00:59:07 by psuanpro         ###   ########.fr       */
+/*   Updated: 2023/06/23 21:48:03 by psuanpro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,17 +37,22 @@ bool	Rpn::isOperator( const std::string& str ) const {
 }
 
 bool	Rpn::isNum( const std::string& str ) const {
-	for (unsigned int i = 0; i< str.size(); i++) {
-		if (str[i] < 0 && str[i] > 9)
+	for (unsigned int i = 0; i < str.size(); i++) {
+		if (str[i] < '0' || str[i] > '9')
 			return (false);
 	}
 	return ( true );
 }
 
+bool	Rpn::cOperator(const char& c) {
+	return (c == '+' || c == '-' || c == '*' || c == '/');
+}
+
 bool	Rpn::validateInput( const std::string& input ) const {
 	for (unsigned int i = 0; i< input.size(); i++) {
-		if (std::isalpha(input[i]))
+		if ((std::isalpha(input[i]) && (input[i] < '0' || input[i] > '9')) && (!cOperator(input[i]))) {
 			return (false);
+		}
 	}
 	return (true);
 }
@@ -73,7 +78,7 @@ int	Rpn::setRmStack() {
 	return (ret);
 }
 
-int	Rpn::calculate(int x, int y, int mode) {
+int	Rpn::calculate_mode(int x, int y, int mode) {
 	switch (mode)
 	{
 		case 1:
@@ -98,38 +103,59 @@ void	Rpn::printError(const std::string& msg) {
 	std::cout << "ERROR : " << msg << std::endl;
 }
 
+bool	Rpn::calculate(const std::string& opt) {
+	int	res = 0;
+	int	a = 0;
+	int b = 0;
+
+	a = this->setRmStack();
+	b = this->setRmStack();
+	if (opt.compare("+") == 0) {
+		res = this->calculate_mode(b, a , 1);
+	} else if (opt.compare("-") == 0) {
+		res = this->calculate_mode(b, a, 2);
+	} else if (opt.compare("*") == 0) {
+		res = this->calculate_mode(b, a ,3);
+	} else if (opt.compare("/") == 0) {
+		if (b == 0)
+			return (false);
+		res = this->calculate_mode(b, a, 4);
+	}
+	this->setAddStack(res);
+	return (true);
+}
+
+void	Rpn::getStack() const {
+	std::stack<int> cp = this->stack;
+	while (!cp.empty()){
+		std::cout << cp.top() << std::endl;
+		cp.pop();
+	}
+	// std::cout << this->stack.top() << std::endl;
+}
+
 void	Rpn::run( const std::string& input ) {
 	std::deque<std::string>::iterator	it;
-	int									result = 0;
-	int									x = 0;
-	int									y = 0;
 
 	if (this->validateInput(input)) {
 		std::deque<std::string> sp = this->split(input, ' ');
 		for (it = sp.begin(); it != sp.end(); it++) {
-			if (this->isNum(it)) {
-				this->setAddStack(std::stoi(it));
-			}else if (this->isOperator(it)) {
-				x = this->setRmStack();
-				y = this->setRmStack();
-				if (this->stack.size() >= 2) {
-					if (it->compare("+") == 0)
-						result = this->calculate(x, y, 1);
-					else if (it->compare("-") == 0)
-						result = this->calculate(x, y, 2);
-					else if (it->compare("*") == 0)
-						result = this->calculate(x, y, 3);
-					else if (it->compare("/") == 0) {
-						if ( y == 0 )
-							return (this->printError("can not divide by zero"));
-						result = this->calculate(x, y, 4);
-					}
-				} else
-					return (this->printError("stack"));
+			if (this->isNum(*it)) {
+				this->setAddStack(std::stoi(*it));
+			}else if (this->isOperator(*it)) {
+				if (this->stack.size() == 0 || this->stack.size() == 1) {
+					this->printError("Stack is empty!!");
+					return ;
+				}
+				if (this->calculate(*it) == false) {
+					this->printError("bad input ", input);
+					return ;
+				}
 			}
 		}
 	} else
 		return (this->printError("bad input", input));
+	this->getStack();
 	return ;
 }
 
