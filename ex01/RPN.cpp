@@ -6,14 +6,14 @@
 /*   By: psuanpro <psuanpro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:42:03 by psuanpro          #+#    #+#             */
-/*   Updated: 2023/06/23 21:48:03 by psuanpro         ###   ########.fr       */
+/*   Updated: 2023/06/24 21:38:10 by psuanpro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "RPN.hpp"
 
 Rpn::Rpn(void) {
-	std::cout << "Rpn created!!" << std::endl;
+
 }
 
 Rpn::Rpn( const Rpn& cp) {
@@ -21,7 +21,7 @@ Rpn::Rpn( const Rpn& cp) {
 }
 
 Rpn::~Rpn() {
-	std::cout << "RPN destroy!!" << std::endl;
+
 }
 
 Rpn&	Rpn::operator=( const Rpn& cp ) {
@@ -45,12 +45,12 @@ bool	Rpn::isNum( const std::string& str ) const {
 }
 
 bool	Rpn::cOperator(const char& c) {
-	return (c == '+' || c == '-' || c == '*' || c == '/');
+	return (c != '+' || c != '-' || c != '*' || c != '/');
 }
 
 bool	Rpn::validateInput( const std::string& input ) const {
 	for (unsigned int i = 0; i< input.size(); i++) {
-		if ((std::isalpha(input[i]) && (input[i] < '0' || input[i] > '9')) && (!cOperator(input[i]))) {
+		if ((input[i] < '0' || input[i] > '9') && (cOperator(input[i]) == false)) {
 			return (false);
 		}
 	}
