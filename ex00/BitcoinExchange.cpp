@@ -6,7 +6,7 @@
 /*   By: psuanpro <psuanpro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 16:18:13 by psuanpro          #+#    #+#             */
-/*   Updated: 2023/06/22 21:49:38 by psuanpro         ###   ########.fr       */
+/*   Updated: 2023/07/11 01:21:10 by psuanpro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	BitcoinExchange::getAllExchange( void ) {
 	return ;
 }
 
-std::vector<std::string>	BitcoinExchange::split( const std::string& str, char delim) {
+std::vector<std::string>	BitcoinExchange::split( const std::string& str, char delim) const{
 	std::vector<std::string> tokens;
 	std::string token;
 	std::istringstream tokenStream(str);
@@ -68,9 +68,9 @@ bool	BitcoinExchange::validateDate( const std::string& date ) {
 	sdate = this->split(date, '-');
 	if (sdate.size() != 3)
 		return (false);
-	ds.year = std::stoi(sdate[0]);
-	ds.month = std::stoi(sdate[1]);
-	ds.day = std::stoi(sdate[2]);
+	ds.year = this->stringToint(sdate[0]);
+	ds.month = this->stringToInt(sdate[1]);
+	ds.day = this->stringToInt(sdate[2]);
 	if (ds.year < 0 || ds.day < 0 || ds.month < 0)
 		return (false);
 	if (this->leabYear(ds.year) && ds.month == 2 && ds.day > 29)
@@ -84,12 +84,24 @@ bool	BitcoinExchange::validateDate( const std::string& date ) {
 	return (true);
 }
 
+int	BitcoinExchange::stringToInt( const std::string& str ) {
+	std::stringstream	ss(str);
+	int					ret;
+
+	if (ss >> ret) {
+		this->printError("typecast error");
+		return (-1);
+	}
+	return (ret);
+}
+
 bool	BitcoinExchange::validatePrice( const std::string& price ) {
 	double		iprice;
+	char*		ePtr;
 
 	if (price.compare("year") == 0)
 		return (false);
-	iprice = std::stod(price);
+	iprice = strtod(price.c_str(), &ePtr);
 	if (iprice < 0)
 		return (false);
 	return (true);
@@ -105,6 +117,7 @@ void	BitcoinExchange::setCsvData( void ) {
 	std::string					tmp;
 	std::vector<std::string>	tvec;
 	std::ifstream				fd;
+
 
 	fd.open("data.csv");
 	if (!fd.is_open())
@@ -223,7 +236,6 @@ void	BitcoinExchange::printCompare(const std::string& date, double price, double
 }
 
 void	BitcoinExchange::compare( const std::vector<std::string>& tvec ) {
-
 	std::string									sdate;
 	std::string									sprice;
 	std::multimap<std::string,double>::iterator	it;

@@ -6,7 +6,7 @@
 /*   By: psuanpro <psuanpro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 16:18:11 by psuanpro          #+#    #+#             */
-/*   Updated: 2023/06/22 17:46:12 by psuanpro         ###   ########.fr       */
+/*   Updated: 2023/06/28 02:50:42 by psuanpro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <sstream>
 # include <map>
 # include <string>
+# include <sstream>
 
 struct	Date {
 	int	year;
@@ -49,8 +50,9 @@ class	 BitcoinExchange {
 		bool						validateInput(const std::string& date, double price);
 		bool						validInputPrice( const std::string& price );
 		void						printCompare(const std::string& date, double price, double rate);
+		int							stringToInt( const std::string& str );
 		std::string					trim( const std::string& str );
-		std::vector<std::string>	split(const std::string& str, char delim);
+		std::vector<std::string>	split(const std::string& str, char delim) const;
 
 	private:
 		std::multimap<std::string, double>	_exchange;

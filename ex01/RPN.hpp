@@ -6,7 +6,7 @@
 /*   By: psuanpro <psuanpro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:42:06 by psuanpro          #+#    #+#             */
-/*   Updated: 2023/06/23 21:46:55 by psuanpro         ###   ########.fr       */
+/*   Updated: 2023/06/28 01:30:59 by psuanpro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ class Rpn
 		bool						validateInput( const std::string& input ) const;
 		void						printError( const std::string& msg, const std::string& input);
 		void						printError( const std::string& msg);
-		static bool						cOperator(const char& c);
-		std::deque<std::string>		split(const std::string& str, const char& delim);
+		static bool					cOperator(const char& c);
+		std::deque<std::string>		split(const std::string& str, const char& delim) const;
 	private:
 		std::stack<int>		stack;
 };

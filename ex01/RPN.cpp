@@ -6,7 +6,7 @@
 /*   By: psuanpro <psuanpro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 19:42:03 by psuanpro          #+#    #+#             */
-/*   Updated: 2023/06/24 21:38:10 by psuanpro         ###   ########.fr       */
+/*   Updated: 2023/06/28 01:31:14 by psuanpro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ Rpn&	Rpn::operator=( const Rpn& cp ) {
 	}
 	return (*this);
 }
-
 
 bool	Rpn::isOperator( const std::string& str ) const {
 	return ((str.compare("+") == 0) || (str.compare("-") == 0) || (str.compare("*") == 0) || (str.compare("/") == 0));
@@ -57,7 +56,7 @@ bool	Rpn::validateInput( const std::string& input ) const {
 	return (true);
 }
 
-std::deque<std::string>	Rpn::split( const std::string& str , const char& delim) {
+std::deque<std::string>	Rpn::split( const std::string& str , const char& delim) const{
 	std::deque<std::string> tokens;
 	std::string token;
 	std::istringstream tokenStream(str);
@@ -131,7 +130,6 @@ void	Rpn::getStack() const {
 		std::cout << cp.top() << std::endl;
 		cp.pop();
 	}
-	// std::cout << this->stack.top() << std::endl;
 }
 
 void	Rpn::run( const std::string& input ) {
@@ -155,6 +153,10 @@ void	Rpn::run( const std::string& input ) {
 		}
 	} else
 		return (this->printError("bad input", input));
+	if (this->stack.size > 1) {
+		this->printError("stack not equal 1");
+		return ;
+	}
 	this->getStack();
 	return ;
 }
